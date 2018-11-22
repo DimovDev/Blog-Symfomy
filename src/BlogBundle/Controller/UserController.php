@@ -48,6 +48,6 @@ class UserController extends Controller
 	public function profile()
 	{
 		$user = $this->getUser();
-		return $this->render("users/profile.html.twig", ['user'=>$user]);
+		return $this->render('users/profile.html.twig', ['user'=>$user]);
 	}
 }
