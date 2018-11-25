@@ -70,3 +70,14 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+
+easy_admin:
+    site_name: '<i>SoftUniBlog</i>'
+    design:
+        brand_color: '#81b9ba'
+        assets:
+            css: ['css/custom_backend.css']
+    entities:
+        - BlogBundle\Entity\Article
+        - BlogBundle\Entity\Role
+        - BlogBundle\Entity\User
