@@ -1,7 +1,4 @@
-blog_rest_api:
-    resource: "@BlogRestApiBundle/Controller/"
-    type:     annotation
-    prefix:   /api
+
 
 app:
     resource: '@BlogBundle/Controller/'

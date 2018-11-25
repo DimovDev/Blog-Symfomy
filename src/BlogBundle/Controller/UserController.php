@@ -31,7 +31,12 @@ class UserController extends Controller
 
 			$roleRepository=$this->getDoctrine()
 				->getRepository(Role::class);
-			$userRole=$roleRepository->findOneBy(['name'=>'ROLE_USER']);
+			if ( $this->getCountOfRegisteredUsers() === 0) {
+				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+			} else {
+				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+			}
+//			$userRole=$roleRepository->findOneBy(['name'=>'ROLE_USER']);
 				$user->addRole($userRole);
 			$user->setPassword($password);
 			$em=$this->getDoctrine()->getManager();
@@ -49,5 +54,9 @@ class UserController extends Controller
 	{
 		$user = $this->getUser();
 		return $this->render('users/profile.html.twig', ['user'=>$user]);
+	}
+	private function getCountOfRegisteredUsers(): int
+	{
+		return \count($this->getDoctrine()->getRepository(User::class)->findAll());
 	}
 }
