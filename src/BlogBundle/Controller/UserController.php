@@ -52,8 +52,15 @@ class UserController extends Controller
 	 */
 	public function profile()
 	{
-		$user = $this->getUser();
-		return $this->render('users/profile.html.twig', ['user'=>$user]);
+		$userId = $this->getUser()->getId();
+
+		$user = $this
+			->getDoctrine()
+			->getRepository(User::class)
+			->find($userId);
+
+		return $this->render('users/profile.html.twig',
+			['user' => $user]);
 	}
 	private function getCountOfRegisteredUsers(): int
 	{

@@ -213,7 +213,7 @@ private $roles;
 	 * @return bool
 	 */
 	public function isAdmin(){
-		return in_array('ROLE_ADMIN', $this->getRoles(), true);
+		return \in_array('ROLE_ADMIN', $this->getRoles(), true);
 	}
 
 	/**

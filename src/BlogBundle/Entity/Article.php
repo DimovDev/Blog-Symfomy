@@ -2,7 +2,7 @@
 
 namespace BlogBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -59,6 +59,20 @@ class Article
 	 */
 	private $author;
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="image", type="string", nullable=false)
+	 */
+	private $image;
+
+	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="viewCount", type="integer")
+	 */
+	private $viewCount;
+
 public function __construct()
 {
 	$this->dateAdded=new \DateTime('now');
@@ -106,7 +120,7 @@ public function __construct()
 	 */
 	public function getSummary()
 	{
-		if (strlen($this->content)>50) {
+		if (\strlen($this->content)>50) {
 			$this->setSummary();
 		}
 		return $this->summary;
@@ -200,6 +214,37 @@ public function __construct()
 	public function getDateAdded()
 	{
 		return $this->dateAdded;
+	}
+	/**
+	 * @return integer
+	 */
+	public function getViewCount(): int
+	{
+		return $this->viewCount;
+	}
+
+	/**
+	 * @param integer $viewCount
+	 */
+	public function setViewCount($viewCount): void
+	{
+		$this->viewCount = $viewCount;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getImage()
+	{
+		return $this->image;
+	}
+
+	/**
+	 * @param string $image
+	 */
+	public function setImage($image)
+	{
+		$this->image = $image;
 	}
 }
 

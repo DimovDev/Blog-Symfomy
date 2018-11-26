@@ -3,7 +3,7 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,8 +18,8 @@ class HomeController extends Controller
     {
     	$articles=$this
 		    ->getDoctrine()
-		    ->getRepository(Article::class
-		    )->findAll();
+		    ->getRepository(Article::class)
+		    ->findBy([], ['viewCount' => 'desc', 'dateAdded'=> 'desc']);
     return $this->render('blog/index.html.twig',['articles'=>$articles]);
     }
 }

@@ -8,7 +8,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-
+    article_directory: '%kernel.project_dir%/web/uploads/images/'
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
@@ -77,7 +77,15 @@ easy_admin:
         brand_color: '#81b9ba'
         assets:
             css: ['css/custom_backend.css']
+    list:
+        title: 'List of %%entity_label%%'
     entities:
-        - BlogBundle\Entity\Article
-        - BlogBundle\Entity\Role
-        - BlogBundle\Entity\User
+        Article:
+             class: BlogBundle\Entity\Article
+             label: Article
+        Role:
+             class: BlogBundle\Entity\Role
+             label: Role
+        User:
+             class: BlogBundle\Entity\User
+             label: User
