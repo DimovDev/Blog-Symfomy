@@ -1,0 +1,24 @@
+{#{% extends 'base.html.twig' %}#}
+{#{% block main %}#}
+    {# @var role \SoftUniBlogBundle\Entity\Role#}
+    {#{% for role in roles %}#}
+        {#<label>#}
+            {#<select name="role">#}
+                {#<option value="{{ role.id }}">{{ role.name }}</option>#}
+            {#</select>#}
+        {#</label>#}
+    {#{% endfor %}#}
+    {#<br>#}
+
+
+
+    {#<div class="card w-50">#}
+        {#<div class="card-body">#}
+            {# @var user \SoftUniBlogBundle\Entity\User#}
+            {#{% for user in users %}#}
+                {#<h5 class="card-title">{{ user.name }}</h5>#}
+                {#<a href="#" class="btn btn-primary">Edit</a>#}
+            {#{% endfor %}#}
+        {#</div>#}
+    {#</div>#}
+{#{% endblock %}#}

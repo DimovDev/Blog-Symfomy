@@ -25,7 +25,10 @@ class UserController extends Controller
 		$form=$this->createForm(UserType::class,$user);
 		$form->handleRequest($request);
 
-		if ($form->isSubmitted()){
+		if ( !$form->isValid()){
+			throw new \Exception('Password dont  match');
+		}
+		if ($form->isSubmitted() ){
 			$password=$this->get('security.password_encoder')
 				->encodePassword($user,$user->getPassword());
 
@@ -33,10 +36,11 @@ class UserController extends Controller
 				->getRepository(Role::class);
 			if ( $this->getCountOfRegisteredUsers() === 0) {
 				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+				//If there is no users in DB first one should be ADMIN all others are USERS
 			} else {
 				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
 			}
-//			$userRole=$roleRepository->findOneBy(['name'=>'ROLE_USER']);
+
 				$user->addRole($userRole);
 			$user->setPassword($password);
 			$em=$this->getDoctrine()->getManager();

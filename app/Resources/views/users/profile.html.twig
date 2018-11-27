@@ -1,12 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id %}
-
-{% endblock %}
+{% block body_id 'profile' %}
 
 {% block main %}
-<h1>
-    Hello,{{ user.fullName }}
-</h1>
+    <div>
+        Username: {{ user.email }}
+        <br>
+        Full name: {{ user.fullName }}
+        <br>
+        Roles:
+        {% for role in user.roles %}
+            {{ role }}
+            <br>
+        {% endfor %}
+        Articles Created:
+        {% for article in user.articles %}
+            <a href="{{ path('article_view', {'id': article.id}) }}"> {{ article.title}}</a>
+            <br>
+        {% endfor %}
+    </div>
 {% endblock %}
-
