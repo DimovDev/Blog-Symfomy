@@ -1,12 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id %}
-
-{% endblock %}
+{% block body_id 'profile' %}
 
 {% block main %}
-<h1>
-    Hello,{{ user.fullName }}
-</h1>
-{% endblock %}
 
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <fieldset>
+                Roles:
+                {% for role in user.roles %}
+                    {{ role }}
+                    <br>
+                {% endfor %}
+                Articles Created:
+                {% for article in user.articles %}
+                    <a href="{{ path('article_view', {'id': article.id}) }}"> {{ article.title}}</a>
+                    <br>
+                {% endfor %}
+                <h2 style="text-align: center">Welcome, {{ user.fullName }}!</h2>
+                <h2 style="text-align: center">With email: {{ user.email }}</h2>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-5">
+                        <a class="btn btn-default" href="{{ path('blog_index') }}">Home</a>
+                        <a class="btn btn-success" href="{{ path('profile_edit') }}">Edit Profile</a>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </
+{% endblock %}

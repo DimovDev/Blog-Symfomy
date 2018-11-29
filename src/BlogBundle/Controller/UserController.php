@@ -18,6 +18,7 @@ class UserController extends Controller
 	 * @Route("/register",name="user_register")
 	 * @param Request $request
 	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
 	 */
 	public function registerAction(Request $request)
 	{
@@ -25,24 +26,47 @@ class UserController extends Controller
 		$form=$this->createForm(UserType::class,$user);
 		$form->handleRequest($request);
 
-		if ($form->isSubmitted()){
-			$password=$this->get('security.password_encoder')
-				->encodePassword($user,$user->getPassword());
+
+		if ($form->isSubmitted()&& $form->isValid()){
+//
+				$password = $this->get('security.password_encoder')
+					->encodePassword($user, $user->getPassword());
 
 			$roleRepository=$this->getDoctrine()
 				->getRepository(Role::class);
 			if ( $this->getCountOfRegisteredUsers() === 0) {
 				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+				//If there is no users in DB first one should be ADMIN all others are USERS
 			} else {
 				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
 			}
-//			$userRole=$roleRepository->findOneBy(['name'=>'ROLE_USER']);
-				$user->addRole($userRole);
+
+			$user->addRole($userRole);
 			$user->setPassword($password);
 			$em=$this->getDoctrine()->getManager();
 			$em->persist($user);
 			$em->flush();
 			return $this->redirectToRoute('security_login');
+		}
+		else{
+			$emailForm = $form->getData()->getEmail();
+
+			$user = $this
+				->getDoctrine()
+				->getRepository(User::class)
+				->findBy(['email' => $emailForm]);
+
+			if(null !== $user) {
+				$this->addFlash('notice', 'Username with email ' . $emailForm . ' already taken!');
+				return $this->render('users/register.html.twig');
+			}
+//			elseif ( !$form->isValid()){
+//				$this->addFlash(
+//					'notice',
+//					'Password don\'t  match');
+//				return $this->render('users/register.html.twig');
+////			throw new \Exception('Password don\'t  match');
+//			}
 		}
 		return $this->render('users/register.html.twig', array('form' => $form->createView()));
 	}
@@ -62,6 +86,39 @@ class UserController extends Controller
 		return $this->render('users/profile.html.twig',
 			['user' => $user]);
 	}
+	/**
+	 * @Route ("/editProfile" , name="profile_edit")
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function editProfileAction(Request $request)
+	{
+		$user = $this->getUser();
+
+		$form = $this->createForm(UserType::class, $user);
+
+		if ($user === null) {
+			return $this->redirectToRoute('blog_index');
+		}
+
+
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted()) {
+			$password = $this->get('security.password_encoder')
+				->encodePassword($user, $user->getPassword());
+			$user->setPassword($password);
+
+			$em = $this->getDoctrine()->getManager();
+			$em->merge($user);
+			$em->flush();
+
+			return $this->redirectToRoute('user_profile');
+		}
+
+		return $this->render('users/editProfile.html.twig', ['user' => $user]);
+	}
+
 	private function getCountOfRegisteredUsers(): int
 	{
 		return \count($this->getDoctrine()->getRepository(User::class)->findAll());
