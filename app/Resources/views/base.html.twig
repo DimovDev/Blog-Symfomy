@@ -25,9 +25,7 @@
                 <div class="navbar-header">
                     <a href="{{ path('blog_index') }}" class="navbar-brand">SOFTUNI BLOG</a>
                     {% if app.user %}
-                        <a href="{{ path('article_create') }}" class="navbar-brand">
-                            Create Article
-                        </a>
+
                     {% endif %}
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -46,7 +44,11 @@
                                     {#</a>#}
                                 {#</li>#}
                             {#{% endif %}#}
-
+                            <li>
+                            <a href="{{ path('article_create') }}" class="navbar-brand">
+                                Create Article
+                            </a>
+                            </li>
                             <li>
                                 <a href="{{ path('user_profile') }}">
                                     {{ app.user.fullname }}'s Profile
@@ -89,7 +91,7 @@
 {% block footer %}
     <footer>
         <div class="container modal-footer">
-            <p>&copy; 2016 - Software University Foundation</p>
+            <p>&copy; 2018 - Software University Foundation</p>
         </div>
     </footer>
 {% endblock %}
