@@ -22,56 +22,74 @@ class UserController extends Controller
 	 */
 	public function registerAction(Request $request)
 	{
-		$user= new User();
-		$form=$this->createForm(UserType::class,$user);
+		$user = new User();
+		$form = $this->createForm(UserType::class, $user);
 		$form->handleRequest($request);
 
+		if ($form->isSubmitted()) {
 
-		if ($form->isSubmitted()&& $form->isValid()){
-//
+			if ($form->isValid()) {
+
+				// Check for already existing user with the same email
+				$emailForm = $form
+					->getData()
+					->getEmail();
+
+				$existingUser = $this
+					->getDoctrine()
+					->getRepository(User::class)
+					->findOneBy(['email' => $emailForm]);
+
+//				dump($user);
+//				exit;
+
+				if (null !== $existingUser) {
+					$this->addFlash('error', 'Username with email ' . $emailForm . ' already taken!');
+					return $this->redirectToRoute('user_register');
+				}
+
+
+				// So, go ahead and register our new user!
 				$password = $this->get('security.password_encoder')
 					->encodePassword($user, $user->getPassword());
 
-			$roleRepository=$this->getDoctrine()
-				->getRepository(Role::class);
-			if ( $this->getCountOfRegisteredUsers() === 0) {
-				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
-				//If there is no users in DB first one should be ADMIN all others are USERS
+				$roleRepository = $this->getDoctrine()
+					->getRepository(Role::class);
+				if ($this->getCountOfRegisteredUsers() === 0) {
+					$userRole = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+					//If there is no users in DB first one should be ADMIN all others are USERS
+				} else {
+					$userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+				}
+
+				$user->addRole($userRole);
+				$user->setPassword($password);
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($user);
+				$em->flush();
+
+				$this->addFlash('notice', 'Succesefuli Register!');
+
+//				die('here');
+
+				return $this->redirectToRoute('security_login');
+
 			} else {
-				$userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+
+				$this->addFlash(
+					'error',
+					'Passwords don\'t  match');
+				return $this->render('users/register.html.twig', array('form' => $form->createView()));
+//				throw new \Exception('Password don\'t  match');
 			}
 
-			$user->addRole($userRole);
-			$user->setPassword($password);
-			$em=$this->getDoctrine()->getManager();
-			$em->persist($user);
-			$em->flush();
-			return $this->redirectToRoute('security_login');
-		}
-		else{
-			$emailForm = $form->getData()->getEmail();
 
-			$user = $this
-				->getDoctrine()
-				->getRepository(User::class)
-				->findBy(['email' => $emailForm]);
-
-			if(null !== $user) {
-				$this->addFlash('notice', 'Username with email ' . $emailForm . ' already taken!');
-				return $this->render('users/register.html.twig');
-			}
-//			elseif ( !$form->isValid()){
-//				$this->addFlash(
-//					'notice',
-//					'Password don\'t  match');
-//				return $this->render('users/register.html.twig');
-////			throw new \Exception('Password don\'t  match');
-//			}
 		}
 		return $this->render('users/register.html.twig', array('form' => $form->createView()));
 	}
+
 	/**
-	 *  @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+	 * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
 	 * @Route("/profile",name="user_profile")
 	 */
 	public function profile()
@@ -86,6 +104,7 @@ class UserController extends Controller
 		return $this->render('users/profile.html.twig',
 			['user' => $user]);
 	}
+
 	/**
 	 * @Route ("/editProfile" , name="profile_edit")
 	 * @param Request $request
@@ -104,7 +123,7 @@ class UserController extends Controller
 
 		$form->handleRequest($request);
 
-		if ($form->isSubmitted()) {
+		if ($form->isSubmitted() && $form->isValid()) {
 			$password = $this->get('security.password_encoder')
 				->encodePassword($user, $user->getPassword());
 			$user->setPassword($password);

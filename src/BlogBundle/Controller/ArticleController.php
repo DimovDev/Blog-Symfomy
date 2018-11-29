@@ -33,7 +33,8 @@ class ArticleController extends Controller
 			/** @var UploadedFile $file */
 			$file = $form->getData()->getImage();
 
-			$fileName = md5(uniqid()) . '.' . $file->guessExtension();
+			/** @var TYPE_NAME $fileName */
+			$fileName = md5(uniqid('', true)) . '.' . $file->guessExtension();
 
 			try {
 				$file->move($this->getParameter('article_directory'),
@@ -50,7 +51,7 @@ class ArticleController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($article);
 			$em->flush();
-
+			$this->addFlash('success', 'Succesefuli Created!');
 			return $this->redirectToRoute("blog_index");
 		}
 		return $this->render('article/create.html.twig',['form'=>$form->createView()]);
@@ -97,7 +98,7 @@ class ArticleController extends Controller
 			/** @var UploadedFile $file */
 			$file = $form->getData()->getImage();
 
-			$fileName = md5(uniqid()) . '.' . $file->guessExtension();
+			$fileName = md5(uniqid('', true)) . '.' . $file->guessExtension();
 
 
 			try {

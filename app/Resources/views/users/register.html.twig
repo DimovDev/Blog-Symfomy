@@ -3,11 +3,7 @@
 {% block body_id 'register' %}
 
 {% block main %}
-    {% for msg in app.session.flashBag.get('notice') %}
-        <div class="alert alert-danger">
-            {{ msg }}
-        </div>
-    {% endfor %}
+
     <div class="container body-content span=8 offset=2">
         <div class="well">
             <form class="form-horizontal" action="{{ path('user_register') }}" method="post">
@@ -46,7 +42,7 @@
                         </div>
                     </div>
 
-                    {#{{  form_row(form._token) }}#}
+                    {{  form_row(form._token) }}
                 </fieldset>
             </form>
         </div>
