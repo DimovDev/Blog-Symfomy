@@ -46,7 +46,7 @@ class User implements UserInterface
 	/**
 	 * @var ArrayCollection
 	 *
-	 * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Role")
+	 * @ORM\ManyToMany(targetEntity="BlogBundle\Entity\Role",inversedBy="users")
 	 * @ORM\JoinTable(name="user_roles", joinColumns={@ORM\JoinColumn(name="user_id",referencedColumnName="id")},inverseJoinColumns={@ORM\JoinColumn(name="role_id",referencedColumnName="id")})
 	 */
 private $roles;
@@ -205,14 +205,16 @@ private $roles;
 	 * @param Article $article
 	 * @return bool
 	 */
-	public function isAuthor(Article $article){
+	public function isAuthor(Article $article):bool
+	{
 		return $article->getAuthorId()===$this->getId();
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isAdmin(){
+	public function isAdmin():bool
+	{
 		return \in_array('ROLE_ADMIN', $this->getRoles(), true);
 	}
 

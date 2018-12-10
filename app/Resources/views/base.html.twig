@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
-        <script src="{{ asset('./js/jquery-3.3.1.min.js') }}"></script>
+        {#<script src="{{ asset('/js/jquery-3.3.1.min.js') }}"></script>#}
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
@@ -46,15 +46,26 @@
 
                             {#{% if app.getUser().isAdmin() %}#}
                                 {#<li>#}
-                                    {#<a href="{{ path('admin_panel') }}">#}
+                                    {#<a href="{{ path('all_users') }}">#}
                                         {#ADMIN PANEL#}
                                     {#</a>#}
                                 {#</li>#}
-                            {#{% endif %}#}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li>
+                                    <a href="{{ path('all_users') }}">
+                                        Admin Panel
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li>
                             <a href="{{ path('article_create') }}" class="navbar-brand">
                                 Create Article
                             </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('myArticles') }}" class="navbar-brand">
+                                    My Article
+                                </a>
                             </li>
                             <li>
                                 <a href="{{ path('user_profile') }}">

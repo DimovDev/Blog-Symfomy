@@ -79,7 +79,11 @@ class Role
         return $this->name;
     }
 
-    public function getRole(){
+	/**
+	 * @return string
+	 */
+	public function getRole()
+	{
     	return $this->getName();
     }
 }

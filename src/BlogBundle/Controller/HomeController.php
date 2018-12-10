@@ -16,6 +16,7 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
+
     	$articles=$this
 		    ->getDoctrine()
 		    ->getRepository(Article::class)
