@@ -25,6 +25,12 @@
 
                     <div id="form">
                     </div>
+                    {% for comment in comments %}
+                        <p>{{ comment.content }}</p>
+                        <small>{{ comment.dateAdded|date("F jS \\a\\t g:ia", 'Europe/Sofia') }}</small>
+                        <small>{{ comment.author.fullName }}</small>
+                        <hr />
+                    {% endfor %}
 
                     <footer>
                         <div class="pull-right">
@@ -43,13 +49,12 @@
     <script>
 
         let form = $(`
-            <form method="post">
+             <form method="post" action="{{ path('add_comment', {'id': article.id}) }}">
                 <div class="form-group">
                     <!--<label class="col-sm-4 control-label" for="article_content">Content</label>-->
                     <div class="col-sm-6">
-                        <textarea class="form-control" rows="6" id="article_content" name="article[content]">
-                        </textarea>
-                        <input class="btn btn-success" type="submit" value="Create" />
+                        <textarea class="form-control" rows="6" id="comment_content" name="comment[content]"></textarea>
+                        <input class="btn btn-success btn-sm" type="submit" value="Create" />
                     </div>
                 </div>
             </form>

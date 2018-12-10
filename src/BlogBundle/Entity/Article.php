@@ -3,6 +3,7 @@
 namespace BlogBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,14 +74,22 @@ class Article
 	 */
 	private $viewCount;
 
+	/**
+	 * @var ArrayCollection|Comment[]
+	 * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comment", mappedBy="article", cascade={"remove"})
+	 *
+	 */
+	private $comments;
+
 public function __construct()
 {
 	$this->dateAdded=new \DateTime('now');
+	$this->comments = new ArrayCollection();
 }
 
 
 	/**
-	 * @return \BlogBundle\Entity\User
+	 * @return User
 	 */
 	public function getAuthor()
 	{
@@ -245,6 +254,23 @@ public function __construct()
 	public function setImage($image)
 	{
 		$this->image = $image;
+	}
+	/**
+	 * @return ArrayCollection|Comment[]
+	 */
+	public function getComments()
+	{
+		return $this->comments;
+	}
+
+	/**
+	 * @param Comment|null $comment
+	 * @return Article
+	 */
+	public function addComment(Comment $comment = null): Article
+	{
+		$this->comments[] = $comment;
+		return $this;
 	}
 }
 

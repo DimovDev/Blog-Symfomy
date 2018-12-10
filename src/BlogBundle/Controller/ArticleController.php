@@ -3,6 +3,7 @@
 namespace BlogBundle\Controller;
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\Comment;
 use BlogBundle\Form\ArticleType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -33,7 +34,7 @@ class ArticleController extends Controller
 			/** @var UploadedFile $file */
 			$file = $form->getData()->getImage();
 
-			/** @var TYPE_NAME $fileName */
+
 			$fileName = md5(uniqid('', true)) . '.' . $file->guessExtension();
 
 			try {
@@ -67,11 +68,16 @@ class ArticleController extends Controller
 			->getDoctrine()
 			->getRepository(Article::class)
 			->find($id);
+
+		$comments = $this->getDoctrine()
+			->getRepository(Comment::class)
+			->findAllComments($article);
+
 		$article->setViewCount($article->getViewCount() + 1);
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($article);
 		$em->flush();
-		return $this->render('article/article.html.twig',['article'=>$article]);
+		return $this->render('article/article.html.twig',['article'=>$article,'comments'=>$comments]);
 	}
 	/**
 	 * @Route("/article/edit/{id}",name="article_edit")
