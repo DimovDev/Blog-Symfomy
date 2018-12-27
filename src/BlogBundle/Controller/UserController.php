@@ -90,9 +90,9 @@ class UserController extends Controller
 
 	/**
 	 * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-	 * @Route("/profile",name="user_profile")
+	 * @Route("/profile",name="user_profile",methods={"GET"})
 	 */
-	public function profile()
+	public function profileAction(): \Symfony\Component\HttpFoundation\Response
 	{
 		$userId = $this->getUser()->getId();
 
